@@ -30,7 +30,7 @@ git clone --depth=1 -b master https://github.com/ISouthRain/corfu-english-helper
 
 ## Usage
 * ```corfu-english-helper-toggle```: toggle on english helper, write only english on the fly.
-* ```corfu-english-helper-toggle-capf```: toggle on english helper, write english and code on the fly.
+* ```corfu-english-helper-capf-mode``` or ```global-corfu-english-helper-capf-mode``` : toggle on english helper, write english and code on the fly.
 * ```corfu-english-helper-search```: popup english helper manually
 
 
