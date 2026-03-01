@@ -154,6 +154,17 @@
 
        ;; 情况 D: 都没有
        (t nil)))))
+
+(defun corfu-english-helper-capf ()
+  "动态获取当前 buffer 的主补全后端，并与 English 补全融合.
+作为一个标准的 CAPF 插入到 `completion-at-point-functions' 中."
+  (let* (;; 从 capf 列表中临时移除 english, 找到真正的原始后端列表
+         (capfs (remove #'corfu-english-helper-capf completion-at-point-functions))
+         ;; 抓取当前排在第一位的合法主后端
+         (main-backend (car capfs)))
+    (when (and main-backend (not (eq main-backend t)))
+      ;; funcall 返回组合后的 lambda，然后直接再 funcall 触发补全核心逻辑
+      (funcall (corfu-english-helper--make-combined-backend main-backend)))))
 
 
 ;;;###autoload
@@ -199,11 +210,28 @@
     (add-hook 'completion-at-point-functions #'corfu-english-helper-search nil t)
     (setq-local corfu-english-helper-active-p t)
     (message "Corfu english helper has enable.")))
+
+;;;###autoload
+(define-minor-mode corfu-english-helper-capf-mode
+  "corfu-english-helper mode"
+  :init-value nil
+  :lighter ""
+  (if corfu-english-helper-capf-mode
+      (progn
+        ;; 开启时：使用 add-hook 添加到局部 hook，depth设为 -100 确保绝对排在最前面
+        (add-hook 'completion-at-point-functions #'corfu-english-helper-capf -100 t))
+    ;; 关闭时：从局部 hook 安全移除
+    (remove-hook 'completion-at-point-functions #'corfu-english-helper-capf t)))
 
-
-
-
-
+;;;###autoload
+(define-globalized-minor-mode global-corfu-english-helper-capf-mode
+  corfu-english-helper-capf-mode
+  (lambda ()
+    ;; 限制某些 mode 启用 english helper.
+    (unless (or (minibufferp)
+                ;; 排除某些不需要英文补全的特殊 buffer
+                (derived-mode-p 'special-mode 'vterm-mode 'term-mode))
+      (corfu-english-helper-capf-mode 1))))
 
 (provide 'corfu-english-helper)
 
