@@ -6,7 +6,7 @@ Since [corfu-english-helper](https://github.com/manateelazycat/corfu-english-hel
 ## What is corfu-english-helper ?
 corfu-english-helper is english writing assistant, help me complete English word.
 
-This plugin base on fantastic completion frameworkw [Corfu](https://github.com/minad/corfu)
+This plugin base on fantastic completion framework [Corfu](https://github.com/minad/corfu)
 
 Only english.
 <img src="./screenshot.png" width="400">
@@ -29,8 +29,8 @@ git clone --depth=1 -b master https://github.com/ISouthRain/corfu-english-helper
 ```
 
 ## Usage
-* ```corfu-english-helper-toggle```: toggle on english helper, write only english on the fly.
-* ```corfu-english-helper-toggle-capf```: toggle on english helper, write english and code on the fly.
+* ```corfu-english-helper-toggle```: Only English helper.
+* ```corfu-english-helper-capf-mode``` or ```global-corfu-english-helper-capf-mode```: English helper and ProgramCode.
 * ```corfu-english-helper-search```: popup english helper manually
 
 
