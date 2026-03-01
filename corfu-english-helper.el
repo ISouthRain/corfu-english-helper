@@ -213,7 +213,7 @@
 
 ;;;###autoload
 (define-minor-mode corfu-english-helper-capf-mode
-  "corfu-english-helper mode"
+  "切换: Corfu 增添 English 单词补全."
   :init-value nil
   :lighter ""
   (if corfu-english-helper-capf-mode
