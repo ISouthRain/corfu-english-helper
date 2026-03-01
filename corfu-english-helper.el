@@ -207,32 +207,22 @@
   (if corfu-english-helper-active-p
       (progn
         ;; 恢复原始状态
-        (setq-local corfu-auto corfu-english-helper--corfu-auto)
-        (when corfu-english-helper--original-capf
-          (setq-local completion-at-point-functions corfu-english-helper--original-capf))
+        (setq-local completion-at-point-functions corfu-english-helper--original-capf)
         (setq-local corfu-english-helper-active-p nil)
-        (message "[corfu-english-helper] 已关闭."))
+        (message "[corfu-english-helper] 混合模式已关闭."))
 
-    ;; 备份当前配置
-    (setq-local corfu-english-helper--corfu-auto corfu-auto)
+    ;; 备份原始 completion-at-point-functions 变量
     (setq-local corfu-english-helper--original-capf completion-at-point-functions)
 
-    ;; 强制开启自动补全 (English Helper 核心需求)
-    (setq-local corfu-auto t)
-    (unless corfu-mode (corfu-mode 1))
-
-    ;; --- 手动合并逻辑 ---
-    (let ((current-main (car completion-at-point-functions)))
-      (if (and current-main (not (eq current-main 'corfu-english-helper-search)))
-          ;; 如果当前有主要补全源，创建一个复合源
-          (setq-local completion-at-point-functions
-                      (cons (corfu-english-helper--make-combined-backend current-main)
-                            (cdr completion-at-point-functions)))
-        ;; 如果当前没别的补全源，直接添加英文补全
-        (add-hook 'completion-at-point-functions #'corfu-english-helper-search nil t)))
+    ;; TODO: setq-local 不太好, 可能因为加载顺序破坏原有 completion-at-point-functions
+    ;; 添加 Egnlish 补全内容到 completion-at-point-functions
+    (setq-local completion-at-point-functions
+                (cons (corfu-english-helper--make-combined-backend (car completion-at-point-functions))
+                      (cdr completion-at-point-functions)))
 
     (setq-local corfu-english-helper-active-p t)
-    (message "[corfu-english-helper] 已开启.")))
+    (message "[corfu-english-helper] 混合模式已开启.")))
+
 
 (provide 'corfu-english-helper)
 
