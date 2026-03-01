@@ -233,6 +233,54 @@
 
     (setq-local corfu-english-helper-active-p t)
     (message "[corfu-english-helper] 已开启.")))
+
+;;;###autoload
+(define-minor-mode corfu-english-helper-capf-mode
+  "切换: Corfu 增添 English 单词补全."
+  :init-value nil
+  :lighter " Eng" ;; 在 mode-line 上显示的提示，不想要可以改为 nil
+  :global nil
+
+  (if corfu-english-helper-capf-mode
+      ;; ----------------- 开启模式逻辑 -----------------
+      (progn
+        ;; 1. 备份当前配置
+        (setq-local corfu-english-helper--corfu-auto corfu-auto)
+        (setq-local corfu-english-helper--original-capf completion-at-point-functions)
+
+        ;; 2. 强制开启自动补全 (English Helper 核心需求)
+        (setq-local corfu-auto t)
+        (unless corfu-mode (corfu-mode 1))
+
+        ;; 3. 执行手动合并逻辑
+        (let ((current-main (car completion-at-point-functions)))
+          (if (and current-main (not (eq current-main 'corfu-english-helper-search)))
+              ;; 如果当前有主要补全源，创建一个复合源
+              (setq-local completion-at-point-functions
+                          (cons (corfu-english-helper--make-combined-backend current-main)
+                                (cdr completion-at-point-functions)))
+            ;; 如果当前没别的补全源，直接添加英文补全
+            (add-hook 'completion-at-point-functions #'corfu-english-helper-search nil t))))
+
+    ;; ----------------- 关闭模式逻辑 -----------------
+    (progn
+      ;; 恢复原始状态
+      (setq-local corfu-auto corfu-english-helper--corfu-auto)
+      (when corfu-english-helper--original-capf
+        (setq-local completion-at-point-functions corfu-english-helper--original-capf)))))
+
+
+;; 安全开启辅助函数：避免在 minibuffer 中意外激活引发报错
+(defun corfu-english-helper-capf--turn-on ()
+  "安全地开启 `corfu-english-helper-capf-mode'。"
+  (unless (minibufferp)
+    (corfu-english-helper-capf-mode 1)))
+
+;;;###autoload
+(define-globalized-minor-mode global-corfu-english-helper-capf-mode
+  corfu-english-helper-capf-mode
+  corfu-english-helper-capf--turn-on
+  "切换: Corfu 增添 English 单词补全.")
 
 (provide 'corfu-english-helper)
 
