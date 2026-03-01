@@ -199,40 +199,6 @@
     (add-hook 'completion-at-point-functions #'corfu-english-helper-search nil t)
     (setq-local corfu-english-helper-active-p t)
     (message "Corfu english helper has enable.")))
-
-;;;###autoload
-(defun corfu-english-helper-toggle-capf ()
-  "切换: Corfu 增添 English 单词补全."
-  (interactive)
-  (if corfu-english-helper-active-p
-      (progn
-        ;; 恢复原始状态
-        (setq-local corfu-auto corfu-english-helper--corfu-auto)
-        (when corfu-english-helper--original-capf
-          (setq-local completion-at-point-functions corfu-english-helper--original-capf))
-        (setq-local corfu-english-helper-active-p nil)
-        (message "[corfu-english-helper] 已关闭."))
-
-    ;; 备份当前配置
-    (setq-local corfu-english-helper--corfu-auto corfu-auto)
-    (setq-local corfu-english-helper--original-capf completion-at-point-functions)
-
-    ;; 强制开启自动补全 (English Helper 核心需求)
-    (setq-local corfu-auto t)
-    (unless corfu-mode (corfu-mode 1))
-
-    ;; --- 手动合并逻辑 ---
-    (let ((current-main (car completion-at-point-functions)))
-      (if (and current-main (not (eq current-main 'corfu-english-helper-search)))
-          ;; 如果当前有主要补全源，创建一个复合源
-          (setq-local completion-at-point-functions
-                      (cons (corfu-english-helper--make-combined-backend current-main)
-                            (cdr completion-at-point-functions)))
-        ;; 如果当前没别的补全源，直接添加英文补全
-        (add-hook 'completion-at-point-functions #'corfu-english-helper-search nil t)))
-
-    (setq-local corfu-english-helper-active-p t)
-    (message "[corfu-english-helper] 已开启.")))
 
 ;;;###autoload
 (define-minor-mode corfu-english-helper-capf-mode
