@@ -77,43 +77,6 @@
 
 
 
-;; 两种合并样式, 目的: 是否将 English 排序在 原有补全 后面.
-;; (defun corfu-english-helper--make-combined-backend (main-backend)
-;;   "合并 `main-backend' 和 English 补全."
-;;   (lambda ()
-;;     (let ((main-res (funcall main-backend))
-;;           (eng-res (corfu-english-helper-search)))
-;;       (cond
-;;        ;; 情况 A: 两个后端都有结果，进行手动合并
-;;        ((and main-res eng-res)
-;;         (let ((start (nth 0 main-res))
-;;               (end (nth 1 main-res))
-;;               (main-table (nth 2 main-res))
-;;               (main-plist (nthcdr 3 main-res))
-;;               (eng-table (nth 2 eng-res)))
-;;           (list start end
-;;                 ;; 核心：合并候选词生成函数
-;;                 (lambda (str pred action)
-;;                   (if (eq action 'metadata)
-;;                       '(metadata (category . mixed))
-;;                     (let ((main-cands (all-completions str main-table pred))
-;;                           (eng-cands (all-completions str eng-table pred)))
-;;                       (append main-cands eng-cands))))
-;;                 ;; 融合属性：优先使用英文的 annotation (因为代码补全通常没有 annotation)
-;;                 :annotation-function
-;;                 (lambda (cand)
-;;                   (or (corfu-english-helper-annotation cand)
-;;                       (plist-get main-plist :annotation-function))))))
-
-;;        ;; 情况 B: 只有英文有结果
-;;        (eng-res eng-res)
-
-;;        ;; 情况 C: 只有原后端有结果
-;;        (main-res main-res)
-
-;;        ;; 情况 D: 都没有
-;;        (t nil)))))
-
 (defun corfu-english-helper--make-combined-backend (main-backend)
   "合并 `main-backend' 和 English 补全, 并将 English 补全排在后面."
   (lambda ()
