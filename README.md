@@ -1,15 +1,25 @@
+## Acknowledgements
+Thanks to the original author [manateelazycat](https://github.com/manateelazycat/)  for their development!
+
+Since [corfu-english-helper](https://github.com/manateelazycat/corfu-english-helper) has been archived, I have forked it and added new features here.
+
 ## What is corfu-english-helper ?
 corfu-english-helper is english writing assistant, help me complete English word.
 
-This plugin base on fantastic completion framework [Corfu](https://github.com/minad/corfu)
+This plugin base on fantastic completion frameworkw [Corfu](https://github.com/minad/corfu)
 
+Only english.
 <img src="./screenshot.png" width="400">
+
+English and Code.
+<img src="./screenshot-capf.png" width="400">
+
 
 ## Install
 1. Download corfu-english-helper:
 
 ```Bash
-git clone --depth=1 -b master https://github.com/manateelazycat/corfu-english-helper.git ~/.emacs.d/site-lisp/corfu-english-helper/
+git clone --depth=1 -b master https://github.com/ISouthRain/corfu-english-helper.git ~/.emacs.d/site-lisp/corfu-english-helper/
 ```
 
 2. Add corfu-english-helper to ```load-path```:
@@ -19,7 +29,8 @@ git clone --depth=1 -b master https://github.com/manateelazycat/corfu-english-he
 ```
 
 ## Usage
-* ```toggle-corfu-english-helper```: toggle on english helper, write english on the fly.
+* ```corfu-english-helper-toggle```: toggle on english helper, write only english on the fly.
+* ```corfu-english-helper-toggle-capf```: toggle on english helper, write english and code on the fly.
 * ```corfu-english-helper-search```: popup english helper manually
 
 
