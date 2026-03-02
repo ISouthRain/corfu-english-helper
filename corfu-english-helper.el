@@ -199,10 +199,8 @@
 (define-globalized-minor-mode global-corfu-english-helper-capf-mode
   corfu-english-helper-capf-mode
   (lambda ()
-    ;; 限制某些 mode 启用 english helper.
-    (unless (or (minibufferp)
-                ;; 排除某些不需要英文补全的特殊 buffer
-                (derived-mode-p 'special-mode 'vterm-mode 'term-mode))
+    ;; Minibuffer 禁用
+    (unless (minibufferp)
       (corfu-english-helper-capf-mode 1))))
 
 (provide 'corfu-english-helper)
