@@ -217,9 +217,8 @@
   :init-value nil
   :lighter ""
   (if corfu-english-helper-capf-mode
-      (progn
-        ;; 开启时：使用 add-hook 添加到局部 hook，depth设为 -100 确保绝对排在最前面
-        (add-hook 'completion-at-point-functions #'corfu-english-helper-capf -100 t))
+      ;; 开启时：使用 add-hook 添加到局部 hook，depth设为 -100 确保绝对排在最前面
+      (add-hook 'completion-at-point-functions #'corfu-english-helper-capf -100 t)
     ;; 关闭时：从局部 hook 安全移除
     (remove-hook 'completion-at-point-functions #'corfu-english-helper-capf t)))
 
